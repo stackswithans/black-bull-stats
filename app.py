@@ -1,11 +1,15 @@
 import streamlit as st
 import pandas as pd
+import os
 from streamlit_gsheets import GSheetsConnection
 import plotly.express as px
+import dotenv
 
-@st.cache_data
+dotenv.load_dotenv()
+spreadsheet = os.environ["SPREADSHEET_URL"]
+
 def load_goals():
-    url = "https://docs.google.com/spreadsheets/d/1p8BCRATIF9k6FrR9DWK6-NfMQyeWcrLcweJtKDQ8-LI/edit?usp=sharing&gid=28718768"
+    url = f"{spreadsheet}&gid=28718768"
     conn = st.connection("gsheets", type=GSheetsConnection)
     data = conn.read(spreadsheet=url)
     return data
@@ -15,9 +19,8 @@ def top_scorers():
     df = pd.DataFrame(data)
     return df.sort_values(by=("Goals"), ascending=False).head(5)
 
-@st.cache_data
 def load_assists():
-    url = "https://docs.google.com/spreadsheets/d/1p8BCRATIF9k6FrR9DWK6-NfMQyeWcrLcweJtKDQ8-LI/edit?usp=sharing&gid=499101221"
+    url = f"{spreadsheet}&gid=499101221"
     conn = st.connection("gsheets", type=GSheetsConnection)
     data = conn.read(spreadsheet=url)
     return data
