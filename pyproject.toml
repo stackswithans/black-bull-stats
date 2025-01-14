@@ -16,7 +16,9 @@ dependencies = [
 
 
 [tool.poetry]
-include = ["app.py"]
+packages = [
+    { include = "app.py" }
+]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
