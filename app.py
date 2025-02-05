@@ -16,7 +16,7 @@ def load_goals():
 
 def top_scorers():
     data = load_goals()
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(data).groupby(["Player"])["Goals"].sum().reset_index()
     return df.sort_values(by=("Goals"), ascending=False).head(5)
 
 def load_assists():
@@ -27,7 +27,7 @@ def load_assists():
 
 def assist_leaders():
     data = load_assists()
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(data).groupby(["Player"])["Assists"].sum().reset_index()
     return df.sort_values(by=("Assists"), ascending=False).head(5)
 
 def raw_data(): 
@@ -38,20 +38,20 @@ def raw_data():
 
 def goals(): 
     st.header("Golos :soccer:")
-    goals = load_goals()
+    goals = load_goals().groupby(["Player"])["Goals"].sum().reset_index()
     fig = px.pie(goals, values='Goals', names='Player', hover_data=['Goals'], color_discrete_sequence=px.colors.qualitative.Antique)
     st.plotly_chart(fig, use_container_width=True)
 
     for i, row in enumerate(top_scorers().iterrows()): 
         c, scorer = row
-        text = f"{i+1}. {scorer['Player']} - {scorer['Goals']}"
+        text = f"{i+1}. {scorer['Player']} - {int(scorer['Goals'])}"
         if i == 0:
             text += " :star:"
         st.markdown(text)
 
 def assists(): 
     st.header("Assistências :a:")
-    assists = load_assists()
+    assists = load_assists().groupby(["Player"])["Assists"].sum().reset_index()
     fig = px.pie(assists, values='Assists', names='Player', hover_data=['Assists'], color_discrete_sequence=px.colors.qualitative.Plotly)
     st.plotly_chart(fig, use_container_width=True)
 
